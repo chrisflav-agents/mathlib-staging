@@ -1,4 +1,4 @@
-import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Subobject
+import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Submodule
 import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Annihilator
 import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.IdealSheaf
 import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.LocallySurjective

@@ -7,7 +7,7 @@ module
 
 public import MathlibStaging.Init
 public import Mathlib.Algebra.Category.Grp.ForgetCorepresentable
-public import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Subobject
+public import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Submodule
 public import Mathlib.Algebra.Category.ModuleCat.Sheaf
 public import Mathlib.CategoryTheory.Sites.Subsheaf
 public import Mathlib.RingTheory.Ideal.Maps

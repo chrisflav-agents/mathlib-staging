@@ -9,7 +9,7 @@ public import MathlibStaging.Init
 public import Mathlib.Algebra.Category.ModuleCat.Presheaf.EpiMono
 
 /-!
-# Subobjects of presheaves of modules from a family of submodules
+# Submodules of presheaves of modules
 
 Given a presheaf of modules `M` over a presheaf of rings `R` and a family of
 submodules `N X ≤ M.obj X` that is stable under the restriction maps of `M`,
