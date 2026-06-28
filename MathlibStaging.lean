@@ -1,2 +1,10 @@
+import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Subobject
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Annihilator
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.IdealSheaf
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.LocallySurjective
+import MathlibStaging.Algebra.Category.ModuleCat.Topology.AnnihilatorStalk
+import MathlibStaging.Algebra.Category.ModuleCat.Topology.AnnihilatorStalkFiniteType
+import MathlibStaging.Algebra.Category.ModuleCat.Topology.SheafifyInstances
+import MathlibStaging.AlgebraicGeometry.IdealSheaf.Quasicoherent
 import MathlibStaging.Init
 import MathlibStaging.Linter.Staging
