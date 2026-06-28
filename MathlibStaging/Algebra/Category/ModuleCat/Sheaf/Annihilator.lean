@@ -137,9 +137,7 @@ noncomputable def annihilator : SheafOfModules.{max v₁ u₁} R where
     -- The annihilator subfunctor is a sheaf: it is closed under the topology.
     have hG : Presieve.IsSheaf J G.toFunctor := by
       rw [G.isSheaf_iff hF]
-      intro U s hs
-      change ∀ ⦃Y : Cᵒᵖ⦄ (f : U ⟶ Y) (m : M.val.obj Y), R.obj.map f s • m = 0
-      intro W φ m
+      intro U s hs W φ m
       -- Pull back the covering sieve along the morphism underlying `φ`.
       have hpb : Sieve.pullback φ.unop (G.sieveOfSection s) ∈ J W.unop :=
         J.pullback_stable φ.unop hs
@@ -155,7 +153,7 @@ noncomputable def annihilator : SheafOfModules.{max v₁ u₁} R where
         have h := (mem_annihilatorIdeal _).mp key (𝟙 (op Y))
           (M.val.map f.op m : M.val.obj (op Y))
         rwa [R.obj.map_id, RingCat.id_apply] at h
-      change M.val.map f.op (R.obj.map φ s • m) = M.val.map f.op 0
+      suffices M.val.map f.op (R.obj.map φ s • m) = M.val.map f.op 0 by exact this
       rw [map_zero, M.val.map_smul, ← RingCat.comp_apply, ← R.obj.map_comp, h0]
     -- Transfer the sheaf condition back to `M.val.annihilator.presheaf`.
     rw [Presheaf.isSheaf_iff_isSheaf_forget (J := J)

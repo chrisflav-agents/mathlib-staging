@@ -49,16 +49,11 @@ instance (U : Opens X) :
     ((Opens.grothendieckTopology X).over U).WEqualsLocallyBijective AddCommGrpCat.{u} :=
   .ofEssentiallySmall _
 
-set_option synthInstance.maxHeartbeats 100000 in
--- Synthesizing `HasSheafCompose` searches for limit preservation of
--- `forget₂ RingCat AddCommGrpCat` through several `forget₂` layers, needing a larger budget.
 instance :
     (Opens.grothendieckTopology X).HasSheafCompose
       (forget₂ RingCat.{u} AddCommGrpCat.{u}) :=
   inferInstance
 
-set_option synthInstance.maxHeartbeats 100000 in
--- See the comment on the base-site instance above.
 instance (U : Opens X) :
     ((Opens.grothendieckTopology X).over U).HasSheafCompose
       (forget₂ RingCat.{u} AddCommGrpCat.{u}) :=

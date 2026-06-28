@@ -88,9 +88,7 @@ theorem mem_annihilator_stalk_iff
         germ M.presheaf U_r x hxUr 0 := by
       intro i
       rw [map_zero]
-      erw [M.germ_ringCat_smul]
-      rw [hr₀]
-      exact hρ _
+      exact (M.germ_ringCat_smul ..).trans (by rw [hr₀]; exact hρ _)
     choose W hxW iU iV he using
       fun i => germ_eq M.presheaf x hxUr hxUr
         (r₀ • M.presheaf.map (homOfLE hUr).op (t i)) 0 (hg i)
@@ -129,7 +127,12 @@ theorem mem_annihilator_stalk_iff
             (r₀ • M.presheaf.map (homOfLE hUr).op (t i)) = 0 := by
           have hm : (homOfLE h1).op = (iU i).op ≫ (homOfLE (hWyWi i)).op := Subsingleton.elim _ _
           rw [hm, Functor.map_comp, ConcreteCategory.comp_apply, he' i, map_zero]
-        erw [hsmul_res] at hsz
+        rw [show
+          M.presheaf.map (homOfLE h1).op (r₀ • M.presheaf.map (homOfLE hUr).op (t i)) =
+          R.map (homOfLE h1).op r₀ •
+            M.presheaf.map (homOfLE h1).op (M.presheaf.map (homOfLE hUr).op (t i))
+          from hsmul_res (homOfLE h1).op r₀ (M.presheaf.map (homOfLE hUr).op (t i))
+          ] at hsz
         have hm2 : (homOfLE h2).op = (homOfLE hUr).op ≫ (homOfLE h1).op := Subsingleton.elim _ _
         rw [hm2, Functor.map_comp, ConcreteCategory.comp_apply]
         exact hsz
@@ -141,7 +144,7 @@ theorem mem_annihilator_stalk_iff
           Subsingleton.elim _ _
         rw [hm]
         simp only [Functor.map_comp, ConcreteCategory.comp_apply]
-      erw [hsmul_res]
+      rw [hsmul_res]
       rw [hA, ha, Finset.smul_sum]
       refine (Finset.sum_eq_zero fun i _ => ?_).trans (map_zero _).symm
       rw [← mul_smul, hRcomm, mul_smul, key i, smul_zero]

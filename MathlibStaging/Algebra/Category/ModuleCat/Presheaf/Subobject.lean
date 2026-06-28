@@ -61,7 +61,8 @@ set_option backward.isDefEq.respectTransparency false in
 noncomputable def toPresheafOfModules : PresheafOfModules.{v} R where
   obj X := ModuleCat.of (R.obj X) (N.toSubmodule X)
   map {X Y} f := ModuleCat.ofHom
-      (Y := (ModuleCat.restrictScalars (R.map f).hom).obj (ModuleCat.of (R.obj Y) (N.toSubmodule Y)))
+      (Y := (ModuleCat.restrictScalars (R.map f).hom).obj
+        (ModuleCat.of (R.obj Y) (N.toSubmodule Y)))
     { toFun := fun m ↦ ⟨M.map f m.val, N.map_mem f m.property⟩
       map_add' := fun a b ↦ Subtype.ext (map_add (M.map f).hom a.val b.val)
       map_smul' := fun r m ↦ Subtype.ext (M.map_smul f r m.val) }

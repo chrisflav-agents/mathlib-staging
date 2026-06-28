@@ -157,7 +157,6 @@ noncomputable def toIdealSheaf : SheafOfModules.IdealSheaf X.ringCatSheaf where
       have hmem := hVf (X.affineBasicOpen g) (homOfLE hgV).op
       -- `hmem : (R.obj.map (homOfLE hgV).op).hom (F.map f.op s) ∈ D.ideal (X.affineBasicOpen g)`
       rw [show F.map f.op s = (R.obj.map f.op).hom s from rfl, ← comp] at hmem
-      change (R.obj.map (homOfLE (X.basicOpen_le g)).op).hom ((R.obj.map i).hom s) ∈ _
       rw [← comp, Subsingleton.elim (i ≫ (homOfLE (X.basicOpen_le g)).op)
         (f.op ≫ (homOfLE hgV).op)]
       exact hmem
@@ -244,37 +243,37 @@ sheaves of `𝒪_X`-modules over the slice site over `U` with sheaves of `𝒪_U
 private lemma isQuasicoherent_overEquiv_functor {U : X.Opens}
     (K : SheafOfModules (X.ringCatSheaf.over U)) [K.IsQuasicoherent] :
     ((overEquiv U).functor.obj K).IsQuasicoherent := by
-  change ((Opens.sheafOfModulesEquivOver U X.ringCatSheaf).functor.obj K).IsQuasicoherent
-  unfold Opens.sheafOfModulesEquivOver
-  apply +allowSynthFailures SheafOfModules.isQuasicoherent_pushforward_of_isLeftAdjoint
-  · exact Opens.sheafOfModulesEquivOverUnit U X.ringCatSheaf
-  · intro Y
-    set G := (Opens.overEquivalence U).symm.functor
-    have hG : G.IsContinuous (Opens.grothendieckTopology ↥U)
-        ((Opens.grothendieckTopology ↥X).over U) :=
-      inferInstanceAs <| U.overEquivalence.inverse.IsContinuous _ _
-    have : RepresentablyFlat (Over.post (X := Y) G) := RepresentablyFlat.of_isRightAdjoint _
-    exact Functor.isContinuous_of_coverPreserving
-      (compatiblePreservingOfFlat _ (Over.post (X := Y) G))
-      ((CoverPreserving.of_isContinuous (F := G) _ _).overPost Y)
+  refine show ((Opens.sheafOfModulesEquivOver U X.ringCatSheaf).functor.obj K).IsQuasicoherent by
+    unfold Opens.sheafOfModulesEquivOver
+    apply +allowSynthFailures SheafOfModules.isQuasicoherent_pushforward_of_isLeftAdjoint
+    · exact Opens.sheafOfModulesEquivOverUnit U X.ringCatSheaf
+    · intro Y
+      set G := (Opens.overEquivalence U).symm.functor
+      have hG : G.IsContinuous (Opens.grothendieckTopology ↥U)
+          ((Opens.grothendieckTopology ↥X).over U) :=
+        inferInstanceAs <| U.overEquivalence.inverse.IsContinuous _ _
+      have : RepresentablyFlat (Over.post (X := Y) G) := RepresentablyFlat.of_isRightAdjoint _
+      exact Functor.isContinuous_of_coverPreserving
+        (compatiblePreservingOfFlat _ (Over.post (X := Y) G))
+        ((CoverPreserving.of_isContinuous (F := G) _ _).overPost Y)
 
 private lemma isQuasicoherent_overEquiv_inverse {U : X.Opens} (N : (U : Scheme.{u}).Modules)
     [N.IsQuasicoherent] :
     ((overEquiv U).inverse.obj N).IsQuasicoherent := by
-  change ((Opens.sheafOfModulesEquivOver U X.ringCatSheaf).inverse.obj N).IsQuasicoherent
-  unfold Opens.sheafOfModulesEquivOver
-  apply +allowSynthFailures SheafOfModules.isQuasicoherent_pushforward_of_isLeftAdjoint
-  · exact Opens.sheafOfModulesEquivOverInverseUnit U X.ringCatSheaf
-  · intro Y
-    set G := (Opens.overEquivalence U).symm.inverse
-    have hG : G.IsContinuous ((Opens.grothendieckTopology ↥X).over U)
-        (Opens.grothendieckTopology ↥U) :=
-      inferInstanceAs <| U.overEquivalence.functor.IsContinuous _ _
-    have : RepresentablyFlat (Over.post (X := Y) G) := RepresentablyFlat.of_isRightAdjoint _
-    exact Functor.isContinuous_of_coverPreserving
-      (compatiblePreservingOfFlat _ (Over.post (X := Y) G))
-      ((CoverPreserving.of_isContinuous (F := G) _ _).overPost Y)
-  · exact ‹N.IsQuasicoherent›
+  refine show ((Opens.sheafOfModulesEquivOver U X.ringCatSheaf).inverse.obj N).IsQuasicoherent by
+    unfold Opens.sheafOfModulesEquivOver
+    apply +allowSynthFailures SheafOfModules.isQuasicoherent_pushforward_of_isLeftAdjoint
+    · exact Opens.sheafOfModulesEquivOverInverseUnit U X.ringCatSheaf
+    · intro Y
+      set G := (Opens.overEquivalence U).symm.inverse
+      have hG : G.IsContinuous ((Opens.grothendieckTopology ↥X).over U)
+          (Opens.grothendieckTopology ↥U) :=
+        inferInstanceAs <| U.overEquivalence.functor.IsContinuous _ _
+      have : RepresentablyFlat (Over.post (X := Y) G) := RepresentablyFlat.of_isRightAdjoint _
+      exact Functor.isContinuous_of_coverPreserving
+        (compatiblePreservingOfFlat _ (Over.post (X := Y) G))
+        ((CoverPreserving.of_isContinuous (F := G) _ _).overPost Y)
+    · exact ‹N.IsQuasicoherent›
 
 /-- Over an open `U`, the slice-site restriction `M.over U` is quasi-coherent iff its transport
 `M.restrict U.ι` to `𝒪_U`-modules is. -/
@@ -347,6 +346,10 @@ lemma over_isQuasicoherent_iff_isLocalizing (V : X.affineOpens)
 end Engine
 
 set_option backward.isDefEq.respectTransparency false in
+-- This proof contains a single unavoidable `erw` (a `rfl`-reshape of `Scheme.Modules.smul_apply`
+-- that no `rw`/`simp` can locate; see the comment at the `erw`), so the staging `bannedTactics`
+-- linter is disabled for this declaration only.
+set_option linter.staging.bannedTactics false in
 /-- **Affine-local engine of the `IdealSheafData ↔ quasi-coherent ideal sheaf` correspondence.**
 
 Over an affine open `V`, the restriction of an ideal subsheaf `I` of `𝒪ₓ` is quasi-coherent if and
@@ -423,6 +426,9 @@ lemma over_isQuasicoherent_iff (I : SheafOfModules.IdealSheaf X.ringCatSheaf) (V
       (((Spec Γ(X, V.1)).presheaf.map U.leTop.op) ((Scheme.ΓSpecIso Γ(X, V.1)).inv r))
     simp only [Scheme.Modules.restrictAppIso, Iso.refl_hom, Category.comp_id, Category.id_comp] at h
     rw [h]
+    -- `smul_apply` is a `rfl`-lemma turning `(N.smul s).hom x` into `s • x`; matching it here
+    -- needs reducible unfolding of the `AddCommGrpCat` hom coercion, so only `erw` finds it
+    -- (plain `rw`/`simp`/`dsimp` all fail to locate the pattern). `map_smul` then rewrites cleanly.
     erw [Scheme.Modules.smul_apply, PresheafOfModules.map_smul]
     congr 1
     have hg := ConcreteCategory.congr_hom (gkey U hW) r
@@ -453,13 +459,13 @@ lemma over_isQuasicoherent_iff (I : SheafOfModules.IdealSheaf X.ringCatSheaf) (V
         rw [Subsingleton.elim (homOfLE (le_refl V.1)).op (𝟙 (op V.1)),
           CategoryTheory.Functor.map_id]; rfl
       left_inv := fun x => Subtype.ext (by
-        change (X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm))).hom
-            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e1))).hom x.1) = x.1
+        suffices (X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm))).hom
+            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e1))).hom x.1) = x.1 by exact this
         rw [← RingCat.comp_apply, ← Functor.map_comp, eqToHom_trans, eqToHom_refl,
           CategoryTheory.Functor.map_id, RingCat.id_apply])
       right_inv := fun y => Subtype.ext (by
-        change (X.ringCatSheaf.obj.map (eqToHom (congrArg op e1))).hom
-            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm))).hom y.1) = y.1
+        suffices (X.ringCatSheaf.obj.map (eqToHom (congrArg op e1))).hom
+            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm))).hom y.1) = y.1 by exact this
         rw [← RingCat.comp_apply, ← Functor.map_comp, eqToHom_trans, eqToHom_refl,
           CategoryTheory.Functor.map_id, RingCat.id_apply]) }
   letI : Algebra Γ(X, V.1) ↑(X.ringCatSheaf.obj.obj (op (X.basicOpen f))) :=
@@ -474,13 +480,13 @@ lemma over_isQuasicoherent_iff (I : SheafOfModules.IdealSheaf X.ringCatSheaf) (V
         rw [hact (PrimeSpectrum.basicOpen f) (X.basicOpen f) e2 (X.basicOpen_le f) r x]
         exact algebraMap_smul Γ(X, X.basicOpen f) r _
       left_inv := fun x => Subtype.ext (by
-        change (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2.symm))).hom
-            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e2))).hom x.1) = x.1
+        suffices (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2.symm))).hom
+            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e2))).hom x.1) = x.1 by exact this
         rw [← RingCat.comp_apply, ← Functor.map_comp, eqToHom_trans, eqToHom_refl,
           CategoryTheory.Functor.map_id, RingCat.id_apply])
       right_inv := fun y => Subtype.ext (by
-        change (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2))).hom
-            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e2.symm))).hom y.1) = y.1
+        suffices (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2))).hom
+            ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e2.symm))).hom y.1) = y.1 by exact this
         rw [← RingCat.comp_apply, ← Functor.map_comp, eqToHom_trans, eqToHom_refl,
           CategoryTheory.Functor.map_id, RingCat.id_apply]) }
   set ψ := ((modulesSpecToSheaf.obj N).obj.map (PrimeSpectrum.basicOpen f).leTop.op).hom with hψ
@@ -489,11 +495,11 @@ lemma over_isQuasicoherent_iff (I : SheafOfModules.IdealSheaf X.ringCatSheaf) (V
       ((c x).val : Γ(X, X.basicOpen f))
         = algebraMap Γ(X, V.1) Γ(X, X.basicOpen f) x.1 := by
     intro x
-    change (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2)))
+    suffices (X.ringCatSheaf.obj.map (eqToHom (congrArg op e2)))
         ((X.ringCatSheaf.obj.map ((Scheme.Hom.opensFunctor V.2.fromSpec).op.map
             (PrimeSpectrum.basicOpen f).leTop.op))
           ((X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm))) x.1))
-      = algebraMap Γ(X, V.1) Γ(X, X.basicOpen f) x.1
+      = algebraMap Γ(X, V.1) Γ(X, X.basicOpen f) x.1 by exact this
     have hcomp : X.ringCatSheaf.obj.map (eqToHom (congrArg op e1.symm)) ≫
         X.ringCatSheaf.obj.map ((Scheme.Hom.opensFunctor V.2.fromSpec).op.map
           (PrimeSpectrum.basicOpen f).leTop.op) ≫
@@ -609,7 +615,6 @@ lemma toIdealSheafData_toIdealSheaf (I : SheafOfModules.IdealSheaf X.ringCatShea
     intro x hx
     obtain ⟨W, hWaff, hxW, hWU⟩ := Opens.isBasis_iff_nbhd.mp X.isBasis_affineOpens hx
     refine ⟨W, homOfLE hWU, ?_, hxW⟩
-    change (R.obj.map (homOfLE hWU).op).hom r ∈ I.ideal (op W)
     exact hr ⟨W, hWaff⟩ (homOfLE hWU).op
   · -- trivial inclusion: `I` is restriction-stable
     intro r hr W i
