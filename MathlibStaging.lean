@@ -1,6 +1,15 @@
 import MathlibStaging.Algebra.Category.ModuleCat.Presheaf.Submodule
 import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Annihilator
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Coherent.Basic
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Coherent.Biproducts
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Coherent.Locality
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Coherent.Stability
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Free
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Generators
+import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.PushforwardContinuous
 import MathlibStaging.Algebra.Category.ModuleCat.Sheaf.Submodule
+import MathlibStaging.CategoryTheory.Sites.CoversTop.Over
+import MathlibStaging.CategoryTheory.Sites.Over
 import MathlibStaging.CategoryTheory.Sites.Whiskering
 import MathlibStaging.Init
 import MathlibStaging.Linter.Staging
